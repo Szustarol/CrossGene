@@ -1,4 +1,4 @@
-#CrossGene
+# CrossGene
 CrossGene is a software that biology (and related) students might find usefull.
 When the development stage is finished, CrossGene will allow:
  - Generation of full-size Punnet Squares (and a CSV export option)
