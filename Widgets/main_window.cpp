@@ -1,4 +1,5 @@
 #include "main_window.hpp"
+#include "Panels/prob_panel.hpp"
 #include "../Translations/strings.hpp"
 
 main_window::main_window() : Gtk::Window(){
@@ -15,8 +16,8 @@ main_window::main_window() : Gtk::Window(){
 
     notebook.set_tab_pos(Gtk::PositionType::POS_TOP);
 
-    panels.at(0) = std::unique_ptr<Gtk::Container>(new Gtk::Table());
+    panels.at(0) = std::unique_ptr<Gtk::Container>(new prob_panel());
     panels.at(0)->set_visible(true);
 
-    notebook.append_page(*panels.at(0).get(), STRINGS[PROBABILITY_TAB_NAME]);
+    notebook.append_page(*panels.at(0).get(), STRINGS[STRING_PROBABILITY_TAB_NAME]);
 }

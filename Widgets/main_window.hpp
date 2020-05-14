@@ -12,7 +12,7 @@ class main_window : public Gtk::Window{
     
     std::array<std::shared_ptr<Gtk::Container>, 1> panels;
 
-public:
+    public:
     main_window();
 
 
