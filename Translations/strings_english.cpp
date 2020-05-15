@@ -6,7 +6,12 @@ const char * const en_en[] = {
     "Probability and Punnett Diagrams",
     "Letter mark",
     "Domination type",
-    "Description"
+    "Description",
+    "Add gene",
+    "Edit gene",
+    "Remove selected",
+    "Confirm",
+    "Cancel"
 };
 
 string_container STRINGS = en_en;

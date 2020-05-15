@@ -1,5 +1,5 @@
 #include "main_window.hpp"
-#include "Panels/prob_panel.hpp"
+#include "Panels/ProbPanel/prob_panel.hpp"
 #include "../Translations/strings.hpp"
 
 main_window::main_window() : Gtk::Window(){

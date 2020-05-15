@@ -5,7 +5,7 @@
 
 typedef const char * const * const string_container;
 
-const std::string program_name = "CrossGene";
+inline constexpr char program_name [] = "CrossGene";
 
 extern string_container STRINGS;
 
@@ -14,7 +14,12 @@ enum{
     STRING_PROBABILITY_TAB_NAME,
     STRING_LETTER_MARK,
     STRING_DOMINATION_TYPE,
-    STRING_DESCRIPTION
+    STRING_DESCRIPTION,
+    STRING_ADD_GENE,
+    STRING_EDIT_GENE,
+    STRING_REMOVE_GENE,
+    STRING_CONFIRM,
+    STRING_CANCEL
 };
 
 #endif
