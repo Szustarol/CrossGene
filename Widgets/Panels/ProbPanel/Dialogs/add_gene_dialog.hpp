@@ -11,12 +11,30 @@ class add_gene_dialog : public Gtk::Dialog{
     Gtk::Label description_label; 
     void gtk_elements_setup();
 
-    Gtk::Box main_box;
+    Gtk::Box * main_box;
     Gtk::Box letter_box, domination_box, description_box, options_box;
+
+    Gtk::ComboBoxText letter_combobox, domination_combobox;
+
+    Gtk::Entry description_entry;
+
+    void on_confirm_clicked();
 
     public:
 
-    add_gene_dialog(std::string title);
+    static constexpr const char domination_ids[] = {
+        'f', 'p', 'c'
+    }; //full, partial, co-domination
+
+    struct retvals{
+        char letter;
+        char domination_type;
+        std::string description;
+    };
+
+    retvals returned_values;
+
+    add_gene_dialog(std::string title, bool modal = true);
 };
 
 #endif

@@ -4,7 +4,7 @@
 void prob_panel::gtk_elements_setup(){
     Gtk::Widget *all[] = {&gene_frame, & gene_selection_treeview,
     &gene_selection_window, &gene_setup_container, &gene_frame_buttons,
-    &add_gene_dial, &add_button, &edit_button, &remove_button};
+    &add_button, &edit_button, &remove_button};
 
     Gtk::Button *btns[] = {&add_button, &edit_button, &remove_button};
     int btn_label_ids[] = {STRING_ADD_GENE, STRING_EDIT_GENE, STRING_REMOVE_GENE}; 

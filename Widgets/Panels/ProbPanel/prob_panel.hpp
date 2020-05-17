@@ -24,6 +24,8 @@ class prob_panel : public Gtk::Box{
 
     void gtk_elements_setup();
 
+    void on_add_gene_clicked();
+
     public:
     prob_panel();
 };
