@@ -3,4 +3,10 @@
 
 #define DEBUG_MODE true
 
+enum GENE_DOMINATION_TYPE{
+    FULL,
+    PARTIAL,
+    CO
+};
+
 #endif

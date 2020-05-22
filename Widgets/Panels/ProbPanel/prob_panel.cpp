@@ -21,11 +21,16 @@ void prob_panel::on_add_gene_clicked(){
         case Gtk::ResponseType::RESPONSE_DELETE_EVENT:
             add_gene_dial.hide();
             break;
+        case Gtk::ResponseType::RESPONSE_APPLY:
+            add_gene_dial.hide();
+            records.add_row(add_gene_dial.returned_values.letter,
+            add_gene_dial.returned_values.domination_type,
+            add_gene_dial.returned_values.description);
+            break;
         default:
             if constexpr(DEBUG_MODE){
                 std::cerr << "Unknown dialog response: " << response << std::endl;
             }
     }
-    if(response == Gtk::ResponseType::RESPONSE_CANCEL)
-        add_gene_dial.hide();
+    add_gene_dial.clear_buffers();
 }

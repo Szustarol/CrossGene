@@ -24,7 +24,7 @@ $(BD)/probpanel.o: Widgets/Panels/ProbPanel/prob_panel.cpp $(BD)/probpanelgtkset
 $(BD)/probpanelgtksetup.o: Widgets/Panels/ProbPanel/prob_panel_gtk_setup.cpp $(BD)/strings.o $(BD)/recordmodel.o
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
-$(BD)/recordmodel.o: Widgets/Panels/ProbPanel/record_model.cpp  Widgets/Panels/ProbPanel/record_model.hpp
+$(BD)/recordmodel.o: Widgets/Panels/ProbPanel/record_model.cpp $(BD)/strings.o Widgets/Panels/ProbPanel/record_model.hpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
 $(BD)/addgenedialog.o: Widgets/Panels/ProbPanel/Dialogs/add_gene_dialog.cpp $(BD)/strings.o

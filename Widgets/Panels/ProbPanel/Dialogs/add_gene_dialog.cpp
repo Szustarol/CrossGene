@@ -1,6 +1,10 @@
 #include "add_gene_dialog.hpp"
 #include "../../../../Translations/strings.hpp"
 
+#if DEBUG_MODE
+    #include <iostream>
+#endif
+
 add_gene_dialog::add_gene_dialog(std::string title, bool modal) 
 : Gtk::Dialog(title, modal){
     gtk_elements_setup();    
@@ -96,6 +100,8 @@ void add_gene_dialog::gtk_elements_setup(){
         p->set_visible(true);
     }
 
+    confirm_button.grab_focus();
+
     set_default_response(Gtk::ResponseType::RESPONSE_CANCEL);
     confirm_button.signal_clicked().connect(sigc::mem_fun(this, &add_gene_dialog::on_confirm_clicked));
     cancel_button.signal_clicked().connect([=](){response(Gtk::ResponseType::RESPONSE_CANCEL);});
@@ -103,6 +109,25 @@ void add_gene_dialog::gtk_elements_setup(){
 
 void add_gene_dialog::on_confirm_clicked(){
     returned_values.letter = letter_combobox.get_active_id().at(0);
-    returned_values.domination_type = letter_combobox.get_active_id().at(0);
-    response(Gtk::ResponseType::RESPONSE_ACCEPT);
+    char dtype = domination_combobox.get_active_id().at(0);
+    if constexpr(DEBUG_MODE){
+        std::cout << "Dtype:" << dtype << std::endl;
+    }
+    switch(dtype){
+        case 'f':
+            returned_values.domination_type = GENE_DOMINATION_TYPE::FULL;
+            break;
+        case 'p':
+            returned_values.domination_type = GENE_DOMINATION_TYPE::PARTIAL;
+            break;
+        case 'c':
+            returned_values.domination_type = GENE_DOMINATION_TYPE::CO;
+            break;
+    }
+    returned_values.description = description_entry.get_text();
+    response(Gtk::ResponseType::RESPONSE_APPLY);
+}
+
+void add_gene_dialog::clear_buffers(){
+    description_entry.set_text("");
 }

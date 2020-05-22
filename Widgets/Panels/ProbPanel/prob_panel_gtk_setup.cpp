@@ -21,7 +21,7 @@ void prob_panel::gtk_elements_setup(){
     std::vector<std::string> columns{STRINGS[STRING_LETTER_MARK],
     STRINGS[STRING_DOMINATION_TYPE], STRINGS[STRING_DESCRIPTION]};
     
-    records.set_records_and_install<int, double, std::string>(columns, gene_selection_treeview);
+    records.set_records_and_install<std::string, std::string, std::string>(columns, gene_selection_treeview);
     
     gene_setup_container.set_orientation(Gtk::Orientation::ORIENTATION_VERTICAL);
 

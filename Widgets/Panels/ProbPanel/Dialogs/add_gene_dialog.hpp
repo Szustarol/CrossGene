@@ -2,6 +2,7 @@
 #define ADD_GENE_DIALOG_HPP
 
 #include <gtkmm.h>
+#include "../../../../defines.hpp"
 
 class add_gene_dialog : public Gtk::Dialog{
     Gtk::Button confirm_button;
@@ -28,13 +29,15 @@ class add_gene_dialog : public Gtk::Dialog{
 
     struct retvals{
         char letter;
-        char domination_type;
+        int domination_type;
         std::string description;
     };
 
     retvals returned_values;
 
     add_gene_dialog(std::string title, bool modal = true);
+
+    void clear_buffers();
 };
 
 #endif

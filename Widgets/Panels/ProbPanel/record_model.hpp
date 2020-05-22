@@ -14,6 +14,8 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
 
     Glib::RefPtr<Gtk::ListStore> list_store;
 
+
+
     unsigned n_columns;
 
     template <typename T>
@@ -63,6 +65,8 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
     const std::string & get_column_name(unsigned index);
 
     const std::vector<std::string> & get_names();
+
+    void add_row(char letter, int dtype, std::string description);
 
     void install_in_treeview(Gtk::TreeView & tv);
 };
