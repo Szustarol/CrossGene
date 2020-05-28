@@ -14,6 +14,8 @@ main_window::main_window() : Gtk::Window(){
     
     add(notebook);
 
+    set_default_size(800, 600);
+
     notebook.set_tab_pos(Gtk::PositionType::POS_TOP);
 
     panels.at(0) = std::unique_ptr<Gtk::Container>(new prob_panel());

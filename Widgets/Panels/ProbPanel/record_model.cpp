@@ -36,3 +36,8 @@ void record_model::add_row(char letter, int dtype, std::string description){
     it.set_value(1, dts);
     it.set_value(2, Glib::ustring(description));
 }
+
+void record_model::remove_row_by_iterator(Gtk::TreeModel::iterator it){
+    list_store->erase(it);
+}
+

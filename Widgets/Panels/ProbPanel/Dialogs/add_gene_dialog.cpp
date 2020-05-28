@@ -65,9 +65,9 @@ void add_gene_dialog::gtk_elements_setup(){
         ep->set_valign(Gtk::Align::ALIGN_CENTER);
     }
 
-    for(char c = 'A'; c <= 'Z'; c++){
+/*    for(char c = 'A'; c <= 'Z'; c++){
         letter_combobox.append(std::string{c}, std::string{c});
-    }
+    }*/
 
     letter_combobox.set_active(0);
 
@@ -108,7 +108,20 @@ void add_gene_dialog::gtk_elements_setup(){
 }
 
 void add_gene_dialog::on_confirm_clicked(){
-    returned_values.letter = letter_combobox.get_active_id().at(0);
+    #if DEBUG_MODE
+        std::cout << "Confirm button pressed" << std::endl;
+    #endif
+    auto letter = letter_combobox.get_active();
+    if(letter == nullptr){
+        #if DEBUG_MODE
+            std::cout << "No letter selected." << std::endl;
+        #endif
+        response(Gtk::ResponseType::RESPONSE_CANCEL);
+        return;
+    }
+    std::string lval;
+    letter->get_value(0, lval);
+    returned_values.letter = lval.at(0);
     char dtype = domination_combobox.get_active_id().at(0);
     if constexpr(DEBUG_MODE){
         std::cout << "Dtype:" << dtype << std::endl;
@@ -130,4 +143,14 @@ void add_gene_dialog::on_confirm_clicked(){
 
 void add_gene_dialog::clear_buffers(){
     description_entry.set_text("");
+}
+
+void add_gene_dialog::set_available_letters(std::vector<char> & letters){
+    clear_buffers();
+    letter_combobox.remove_all();
+    for(auto & c : letters){
+        letter_combobox.append(std::string{c}, std::string{c});
+    }
+    if(letters.size() != 0)
+        letter_combobox.set_active_id(std::string{letters.at(0)});
 }

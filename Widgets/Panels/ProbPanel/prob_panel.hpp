@@ -8,6 +8,8 @@
 
 class prob_panel : public Gtk::Box{
 
+    std::vector<char, int> gene_data_package;
+
     record_model records;
 
     Gtk::Frame gene_frame;
@@ -20,13 +22,21 @@ class prob_panel : public Gtk::Box{
     Gtk::TreeView gene_selection_treeview;
     Gtk::ScrolledWindow gene_selection_window;
 
-    Gtk::Button add_button, edit_button, remove_button;
+    std::map<char, bool> available_letters;
+
+    Gtk::Button add_button, remove_button;
+
+    std::vector<char> get_available_letters_vec();
 
     void gtk_elements_setup();
 
     void on_add_gene_clicked();
+    void on_remove_gene_clicked();
+    void on_edit_gene_clicked();
+    void on_treeview_changed();
 
     public:
+
     prob_panel();
 };
 

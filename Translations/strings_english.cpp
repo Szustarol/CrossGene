@@ -14,7 +14,8 @@ const char * const en_en[] = {
     "Cancel",
     "Full",
     "Partial",
-    "Co-dominance"
+    "Co-dominance",
+    "Add/Edit a gene"
 };
 
 string_container STRINGS = en_en;

@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include "../../../../defines.hpp"
+#include <map>
 
 class add_gene_dialog : public Gtk::Dialog{
     Gtk::Button confirm_button;
@@ -35,6 +36,8 @@ class add_gene_dialog : public Gtk::Dialog{
 
     retvals returned_values;
 
+    void set_available_letters(std::vector<char> & letters);
+    
     add_gene_dialog(std::string title, bool modal = true);
 
     void clear_buffers();

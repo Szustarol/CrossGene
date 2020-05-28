@@ -68,6 +68,8 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
 
     void add_row(char letter, int dtype, std::string description);
 
+    void remove_row_by_iterator(Gtk::TreeModel::iterator it);
+
     void install_in_treeview(Gtk::TreeView & tv);
 };
 
