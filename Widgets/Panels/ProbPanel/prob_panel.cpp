@@ -33,9 +33,12 @@ void prob_panel::on_add_gene_clicked(){
             break;
         case Gtk::ResponseType::RESPONSE_APPLY:{
             add_gene_dial.hide();
+            int n_cdm = add_gene_dial.returned_values.n_codominant;
+            if(add_gene_dial.returned_values.domination_type != GENE_DOMINATION_TYPE::CO)
+                n_cdm = 0;
             records.add_row(add_gene_dial.returned_values.letter,
             add_gene_dial.returned_values.domination_type,
-            add_gene_dial.returned_values.description);
+            add_gene_dial.returned_values.description, n_cdm);
             available_letters.at(add_gene_dial.returned_values.letter) = false;
             unsigned rows = records.n_rows();
             if(rows > 1){

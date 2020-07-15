@@ -9,6 +9,7 @@ add_gene_dialog::add_gene_dialog(std::string title, bool modal)
 : Gtk::Dialog(title, modal){
     n_codomin = 2;
     gtk_elements_setup();    
+    codominance_focus_out(nullptr);
 }
 
 
@@ -148,6 +149,7 @@ void add_gene_dialog::on_confirm_clicked(){
             break;
     }
     returned_values.description = description_entry.get_text();
+    returned_values.n_codominant = n_codomin;
     response(Gtk::ResponseType::RESPONSE_APPLY);
 }
 

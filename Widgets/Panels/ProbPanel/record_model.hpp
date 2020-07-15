@@ -6,6 +6,7 @@
 #include <utility>
 #include <any>
 #include <gtkmm.h>
+#include "../../../Translations/strings.hpp"
 
 class record_model : public Gtk::TreeModel::ColumnRecord{
     std::vector<std::any> columns;
@@ -40,15 +41,23 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
     public:
 
     template <typename ... Ts>
-    void set_records_and_install(std::vector<std::string> column_names, Gtk::TreeView & tv){
+    void set_records_and_install(std::vector<std::string> column_names, Gtk::TreeView & tv, bool include_selection = true){
         n_columns = 0;
 
         columns.clear();
         names.clear();
 
+        Gtk::TreeModelColumn<std::string> domtype1;
+        Gtk::TreeModelColumn<std::string> domtype2;
+
         auto name_iter = column_names.begin();
 
         (extract_record_data<Ts>(*(name_iter++)), ...);
+
+        if(include_selection){
+            add(domtype1);
+            add(domtype2);
+        }
 
         list_store = Gtk::ListStore::create(*this);
 
@@ -57,6 +66,11 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
         unsigned vct_idx = 0;
 
         (append_to_view<Ts>(vct_idx++, tv), ...);
+
+        if(include_selection){
+            tv.append_column_editable(STRINGS[STRING_G1_TYPE], domtype1);
+            tv.append_column_editable(STRINGS[STRING_G2_TYPE], domtype2);
+        }
     }
 
     unsigned num_columns();
@@ -66,7 +80,7 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
 
     const std::vector<std::string> & get_names();
 
-    void add_row(char letter, int dtype, std::string description);
+    void add_row(char letter, int dtype, std::string description, int n_codom);
 
     void remove_row_by_iterator(Gtk::TreeModel::iterator it);
 

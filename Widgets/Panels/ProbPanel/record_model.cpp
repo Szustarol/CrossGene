@@ -18,7 +18,7 @@ const std::vector<std::string> & record_model::get_names(){
     return names;
 }
 
-void record_model::add_row(char letter, int dtype, std::string description){
+void record_model::add_row(char letter, int dtype, std::string description, int n_codom){
     auto it = *list_store->append();
     it.set_value(0, Glib::ustring(1, letter));
     Glib::ustring dts;
@@ -35,6 +35,13 @@ void record_model::add_row(char letter, int dtype, std::string description){
     }
     it.set_value(1, dts);
     it.set_value(2, Glib::ustring(description));
+    if(n_codom != 0){
+        it.set_value(3, Glib::ustring(std::to_string(n_codom)));
+    }
+    else{
+        it.set_value(3, Glib::ustring("N/A"));
+    }
+    it.set_value(4, false);
 }
 
 void record_model::remove_row_by_iterator(Gtk::TreeModel::iterator it){

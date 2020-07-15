@@ -17,7 +17,10 @@ const char * const en_en[] = {
     "Co-dominance",
     "Add/Edit a gene",
     "Calculate diagram",
-    "Number of codominant allele"
+    "Number of codominant allele",
+    "Gamete I type",
+    "Gamete II type",
+    "Double click the Gamete type cell to change dominance type.",
 };
 
 string_container STRINGS = en_en;
