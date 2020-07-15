@@ -41,3 +41,6 @@ void record_model::remove_row_by_iterator(Gtk::TreeModel::iterator it){
     list_store->erase(it);
 }
 
+unsigned record_model::n_rows(){
+    return list_store->children().size();
+}

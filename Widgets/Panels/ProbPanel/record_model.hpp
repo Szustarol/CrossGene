@@ -70,6 +70,8 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
 
     void remove_row_by_iterator(Gtk::TreeModel::iterator it);
 
+    unsigned n_rows();
+
     void install_in_treeview(Gtk::TreeView & tv);
 };
 

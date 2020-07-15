@@ -7,6 +7,7 @@
 
 add_gene_dialog::add_gene_dialog(std::string title, bool modal) 
 : Gtk::Dialog(title, modal){
+    n_codomin = 2;
     gtk_elements_setup();    
 }
 
@@ -16,17 +17,18 @@ void add_gene_dialog::gtk_elements_setup(){
     &letter_label, &domination_label, &description_label,
     &letter_box, &domination_box, &description_box,
     &options_box, &letter_combobox, &domination_combobox,
-    &description_entry};
+    &description_entry, &codomination_label, &codominance_entry,
+    &codomination_box};
 
     main_box = get_vbox();
-    Gtk::Box * hboxes [] = {&letter_box, &domination_box, &description_box, &options_box};
+    Gtk::Box * hboxes [] = {&letter_box, &domination_box, &codomination_box, &description_box, &options_box};
 
     Gtk::Button * buttons [] = {&confirm_button, &cancel_button};
     int btn_text_idxs []= {STRING_CONFIRM, STRING_CANCEL};
 
-    int label_text_idxs [] = {STRING_LETTER_MARK, STRING_DOMINATION_TYPE, STRING_DESCRIPTION};
+    int label_text_idxs [] = {STRING_LETTER_MARK, STRING_DOMINATION_TYPE, STRING_DESCRIPTION, STRING_NO_CODOMIN};
 
-    Gtk::Label * text_labels [] = {&letter_label, &domination_label, &description_label};
+    Gtk::Label * text_labels [] = {&letter_label, &domination_label, &description_label, &codomination_label};
 
     int * label_txt_idx = label_text_idxs;
 
@@ -65,9 +67,6 @@ void add_gene_dialog::gtk_elements_setup(){
         ep->set_valign(Gtk::Align::ALIGN_CENTER);
     }
 
-/*    for(char c = 'A'; c <= 'Z'; c++){
-        letter_combobox.append(std::string{c}, std::string{c});
-    }*/
 
     letter_combobox.set_active(0);
 
@@ -93,6 +92,9 @@ void add_gene_dialog::gtk_elements_setup(){
     description_box.add(description_label);
     description_box.add(description_entry);
 
+    codomination_box.add(codomination_label);
+    codomination_box.add(codominance_entry);
+
     main_box->set_vexpand(true);
     main_box->set_spacing(5);
 
@@ -100,14 +102,22 @@ void add_gene_dialog::gtk_elements_setup(){
         p->set_visible(true);
     }
 
+    codomination_box.set_visible(false); //important!
+    codominance_entry.set_text(std::to_string(n_codomin));
+
+    domination_combobox.signal_changed().connect(sigc::mem_fun(this, &add_gene_dialog::on_combobox_changed));
+
     confirm_button.grab_focus();
 
+    codominance_entry.signal_focus_out_event().connect(sigc::mem_fun(this, &add_gene_dialog::codominance_focus_out));
+    codominance_entry.signal_changed().connect(sigc::mem_fun(this, &add_gene_dialog::codominance_count_edited));
     set_default_response(Gtk::ResponseType::RESPONSE_CANCEL);
     confirm_button.signal_clicked().connect(sigc::mem_fun(this, &add_gene_dialog::on_confirm_clicked));
     cancel_button.signal_clicked().connect([=](){response(Gtk::ResponseType::RESPONSE_CANCEL);});
 }
 
 void add_gene_dialog::on_confirm_clicked(){
+    codominance_focus_out(nullptr);
     #if DEBUG_MODE
         std::cout << "Confirm button pressed" << std::endl;
     #endif
@@ -153,4 +163,41 @@ void add_gene_dialog::set_available_letters(std::vector<char> & letters){
     }
     if(letters.size() != 0)
         letter_combobox.set_active_id(std::string{letters.at(0)});
+}
+
+bool is_number(const std::string & s){
+    return std::find_if(s.begin(), 
+        s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
+
+bool add_gene_dialog::codominance_focus_out(GdkEventFocus*){
+    if(codominance_entry.get_text().length() == 0){
+        codominance_entry.set_text(std::to_string(n_codomin));
+    }
+    return false;
+}
+
+void add_gene_dialog::codominance_count_edited(){
+    std::string content = codominance_entry.get_text();
+    if(is_number(content)){
+        if(content.length() == 0)
+            return;
+        unsigned number = std::stoi(content);
+        if(number > 8) number = 8;
+        n_codomin = number;
+        codominance_entry.set_text(std::to_string(n_codomin));
+    }
+    else{
+        codominance_entry.set_text(std::to_string(n_codomin));
+    }
+}
+
+void add_gene_dialog::on_combobox_changed(){
+    char dtype = domination_combobox.get_active_id().at(0);
+    if(dtype == 'c'){
+        codomination_box.set_visible(true);
+    }
+    else{
+        codomination_box.set_visible(false);   
+    }
 }

@@ -4,10 +4,10 @@
 void prob_panel::gtk_elements_setup(){
     Gtk::Widget *all[] = {&gene_frame, & gene_selection_treeview,
     &gene_selection_window, &gene_setup_container, &gene_frame_buttons,
-    &add_button, &remove_button};
+    &add_button, &remove_button, &calc_button};
 
-    Gtk::Button *btns[] = {&add_button, &remove_button};
-    int btn_label_ids[] = {STRING_ADD_GENE, STRING_REMOVE_GENE}; 
+    Gtk::Button *btns[] = {&add_button, &remove_button, &calc_button};
+    int btn_label_ids[] = {STRING_ADD_GENE, STRING_REMOVE_GENE, STRING_CALCULATE}; 
 
     gene_frame.set_label(STRINGS[STRING_GENE_LIST]);
     gene_frame.set_hexpand(true);
@@ -46,6 +46,8 @@ void prob_panel::gtk_elements_setup(){
     }
 
     gene_setup_container.add(gene_frame_buttons);
+
+    calc_button.set_sensitive(false);
 
     for(auto & p : all)
         p->set_visible(true);

@@ -31,12 +31,20 @@ void prob_panel::on_add_gene_clicked(){
         case Gtk::ResponseType::RESPONSE_DELETE_EVENT:
             add_gene_dial.hide();
             break;
-        case Gtk::ResponseType::RESPONSE_APPLY:
+        case Gtk::ResponseType::RESPONSE_APPLY:{
             add_gene_dial.hide();
             records.add_row(add_gene_dial.returned_values.letter,
             add_gene_dial.returned_values.domination_type,
             add_gene_dial.returned_values.description);
             available_letters.at(add_gene_dial.returned_values.letter) = false;
+            unsigned rows = records.n_rows();
+            if(rows > 1){
+                calc_button.set_sensitive(true);
+            }
+            else{
+                calc_button.set_sensitive(false);
+            }
+            }
             break;
         default:
             if constexpr(DEBUG_MODE){
@@ -54,6 +62,10 @@ void prob_panel::on_treeview_changed(){
     else{
         remove_button.set_sensitive(true);
     }
+}
+
+void prob_panel::on_calc_clicked(){
+    
 }
 
 void prob_panel::on_remove_gene_clicked(){

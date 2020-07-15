@@ -8,7 +8,7 @@
 
 class prob_panel : public Gtk::Box{
 
-    std::vector<char, int> gene_data_package;
+    std::vector<std::pair<char, int>> gene_data_package;
 
     record_model records;
 
@@ -24,7 +24,7 @@ class prob_panel : public Gtk::Box{
 
     std::map<char, bool> available_letters;
 
-    Gtk::Button add_button, remove_button;
+    Gtk::Button add_button, remove_button, calc_button;
 
     std::vector<char> get_available_letters_vec();
 
@@ -34,6 +34,7 @@ class prob_panel : public Gtk::Box{
     void on_remove_gene_clicked();
     void on_edit_gene_clicked();
     void on_treeview_changed();
+    void on_calc_clicked();
 
     public:
 
