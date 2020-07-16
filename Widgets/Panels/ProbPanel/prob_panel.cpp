@@ -88,3 +88,4 @@ std::vector<char> prob_panel::get_available_letters_vec(){
     }
     return result;
 }
+

@@ -68,9 +68,10 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
         (append_to_view<Ts>(vct_idx++, tv), ...);
 
         if(include_selection){
-            tv.append_column_editable(STRINGS[STRING_G1_TYPE], domtype1);
-            tv.append_column_editable(STRINGS[STRING_G2_TYPE], domtype2);
+            tv.append_column(STRINGS[STRING_G1_TYPE], domtype1);
+            tv.append_column(STRINGS[STRING_G2_TYPE], domtype2);
         }
+        tv.signal_row_activated().connect(sigc::mem_fun(this, &record_model::row_double_click));
     }
 
     unsigned num_columns();
@@ -85,6 +86,8 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
     void remove_row_by_iterator(Gtk::TreeModel::iterator it);
 
     unsigned n_rows();
+
+    void row_double_click(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
 
     void install_in_treeview(Gtk::TreeView & tv);
 };

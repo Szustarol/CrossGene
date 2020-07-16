@@ -21,6 +21,10 @@ const char * const en_en[] = {
     "Gamete I type",
     "Gamete II type",
     "Double click the Gamete type cell to change dominance type.",
+    "Is this gamete dominant?",
+    "Yes",
+    "No",
+    "Select the version of the codominant allele",
 };
 
 string_container STRINGS = en_en;
