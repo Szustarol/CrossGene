@@ -40,7 +40,7 @@ class add_gene_dialog : public Gtk::Dialog{
 
     struct retvals{
         char letter;
-        int domination_type;
+        GENE_DOMINATION_TYPE domination_type;
         std::string description;
         int n_codominant;
     };

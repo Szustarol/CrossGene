@@ -9,4 +9,9 @@ enum GENE_DOMINATION_TYPE{
     CO
 };
 
+enum GAMETE_DOMINATION_TYPE{
+    DOMINANT,
+    RECESIVE,
+};
+
 #endif

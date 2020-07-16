@@ -167,7 +167,7 @@ void add_gene_dialog::set_available_letters(std::vector<char> & letters){
         letter_combobox.set_active_id(std::string{letters.at(0)});
 }
 
-bool is_number(const std::string & s){
+static bool is_number(const std::string & s){
     return std::find_if(s.begin(), 
         s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }

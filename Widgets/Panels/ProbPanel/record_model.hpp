@@ -7,6 +7,7 @@
 #include <any>
 #include <gtkmm.h>
 #include "../../../Translations/strings.hpp"
+#include "../../../program_data.hpp"
 
 class record_model : public Gtk::TreeModel::ColumnRecord{
     std::vector<std::any> columns;
@@ -15,9 +16,11 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
 
     Glib::RefPtr<Gtk::ListStore> list_store;
 
-
+    GENE_DATA * parent_gene_data;    
 
     unsigned n_columns;
+
+    void update_data_package();
 
     template <typename T>
     void extract_record_data(std::string col_name){
@@ -41,8 +44,10 @@ class record_model : public Gtk::TreeModel::ColumnRecord{
     public:
 
     template <typename ... Ts>
-    void set_records_and_install(std::vector<std::string> column_names, Gtk::TreeView & tv, bool include_selection = true){
+    void set_records_and_install(std::vector<std::string> column_names, GENE_DATA * gd, Gtk::TreeView & tv, bool include_selection = true){
         n_columns = 0;
+
+        parent_gene_data = gd;
 
         columns.clear();
         names.clear();

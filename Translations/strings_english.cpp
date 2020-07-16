@@ -25,6 +25,10 @@ const char * const en_en[] = {
     "Yes",
     "No",
     "Select the version of the codominant allele",
+    "Dominant",
+    "Recesive",
+    "Codominant type ",
+    "Not present",
 };
 
 string_container STRINGS = en_en;

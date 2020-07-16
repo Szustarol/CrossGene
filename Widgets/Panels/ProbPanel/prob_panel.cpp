@@ -46,6 +46,18 @@ void prob_panel::on_add_gene_clicked(){
             }
             else{
                 calc_button.set_sensitive(false);
+            }   
+            char l = add_gene_dial.returned_values.letter;
+            gene_data[l] = gene_data_package();
+            gene_data[l].dtype = add_gene_dial.returned_values.domination_type;
+            int dtype = gene_data[l].dtype;
+            if(dtype == GENE_DOMINATION_TYPE::FULL or dtype == GENE_DOMINATION_TYPE::PARTIAL){
+                gene_data[l].gamete1.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+                gene_data[l].gamete2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+            }
+            else{
+                gene_data[l].gamete1.codomination_index = 1;
+                gene_data[l].gamete2.codomination_index = 2;
             }
             }
             break;
@@ -76,6 +88,7 @@ void prob_panel::on_remove_gene_clicked(){
     if(it){
         std::string letter;
         it->get_value(0, letter);
+        gene_data.erase(letter.at(0));
         available_letters.at(letter.at(0)) = true;
         records.remove_row_by_iterator(it);
     }
@@ -88,4 +101,3 @@ std::vector<char> prob_panel::get_available_letters_vec(){
     }
     return result;
 }
-

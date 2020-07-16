@@ -5,10 +5,12 @@
 #include <utility>
 #include "record_model.hpp"
 #include "Dialogs/add_gene_dialog.hpp"
+#include "../../../program_data.hpp"
+
 
 class prob_panel : public Gtk::Box{
 
-    std::vector<std::pair<char, int>> gene_data_package;
+    GENE_DATA gene_data;
 
     record_model records;
 
@@ -24,6 +26,10 @@ class prob_panel : public Gtk::Box{
 
     std::map<char, bool> available_letters;
 
+    Gtk::Label helper_label;
+
+    Gtk::Label crossing_label;
+
     Gtk::Button add_button, remove_button, calc_button;
 
     std::vector<char> get_available_letters_vec();
@@ -37,6 +43,7 @@ class prob_panel : public Gtk::Box{
     void on_calc_clicked();
 
     public:
+
 
     prob_panel();
 };
