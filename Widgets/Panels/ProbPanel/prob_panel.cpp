@@ -16,9 +16,17 @@ add_gene_dial(STRINGS[STRING_ADD_EDIT_GENE], true){
         available_letters.insert(std::pair<char, bool>(l, true));
     }
 
+    records.result_label = &crossing_label;
+
     remove_button.signal_clicked().connect(sigc::mem_fun(this, &prob_panel::on_remove_gene_clicked));
     add_button.signal_clicked().connect(sigc::mem_fun(this, &prob_panel::on_add_gene_clicked));
     gene_selection_treeview.get_selection()->signal_changed().connect(sigc::mem_fun(this, &prob_panel::on_treeview_changed));
+
+    for(unsigned column_idx; column_idx<gene_selection_treeview.get_n_columns(); column_idx++){
+        gene_selection_treeview.get_column(column_idx)->set_sizing(Gtk::TreeViewColumnSizing::TREE_VIEW_COLUMN_AUTOSIZE);
+        gene_selection_treeview.get_column(column_idx)->set_resizable(true);
+    }
+
 }
 
 void prob_panel::on_add_gene_clicked(){
@@ -54,19 +62,25 @@ void prob_panel::on_add_gene_clicked(){
             if(dtype == GENE_DOMINATION_TYPE::FULL or dtype == GENE_DOMINATION_TYPE::PARTIAL){
                 gene_data[l].gamete1.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
                 gene_data[l].gamete2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+                gene_data[l].gamete1_2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+                gene_data[l].gamete2_2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
             }
             else{
                 gene_data[l].gamete1.codomination_index = 1;
                 gene_data[l].gamete2.codomination_index = 2;
+                gene_data[l].gamete1_2.codomination_index = 1;
+                gene_data[l].gamete2_2.codomination_index = 2;
             }
             }
             break;
         default:
-            if constexpr(DEBUG_MODE){
+            #if DEBUG_MODE
                 std::cerr << "Unknown dialog response: " << response << std::endl;
-            }
+            #endif
+            break;
     }
     add_gene_dial.clear_buffers();
+    records.update_data_package();
 }
 
 void prob_panel::on_treeview_changed(){
@@ -91,6 +105,7 @@ void prob_panel::on_remove_gene_clicked(){
         gene_data.erase(letter.at(0));
         available_letters.at(letter.at(0)) = true;
         records.remove_row_by_iterator(it);
+        records.update_data_package();
     }
 }
 

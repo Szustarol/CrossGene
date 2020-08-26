@@ -18,7 +18,7 @@ $(BD)/mainwindow.o: Widgets/main_window.cpp $(BD)/probpanel.o $(BD)/strings.o
 
 #Probability panel
 
-$(BD)/probpanel.o: Widgets/Panels/ProbPanel/prob_panel.cpp program_data.hpp $(BD)/probpanelgtksetup.o $(BD)/addgenedialog.o
+$(BD)/probpanel.o: Widgets/Panels/ProbPanel/prob_panel.cpp program_data.hpp $(BD)/probpanelgtksetup.o $(BD)/addgenedialog.o $(BD)/calculatediagram.o
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
 $(BD)/probpanelgtksetup.o: Widgets/Panels/ProbPanel/prob_panel_gtk_setup.cpp $(BD)/strings.o $(BD)/recordmodel.o
@@ -29,6 +29,13 @@ $(BD)/recordmodel.o: Widgets/Panels/ProbPanel/record_model.cpp program_data.hpp 
 
 $(BD)/addgenedialog.o: Widgets/Panels/ProbPanel/Dialogs/add_gene_dialog.cpp $(BD)/strings.o
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
+
+
+#Calculations
+
+$(BD)/calculatediagram.o: Calculations/calculate_diagram.cpp program_data.hpp Calculations/calculate_diagram.hpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
+
 
 #Strings and globals
 

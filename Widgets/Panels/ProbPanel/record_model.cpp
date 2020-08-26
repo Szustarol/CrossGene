@@ -43,10 +43,14 @@ void record_model::add_row(char letter, int dtype, std::string description, int 
         it.set_value(3, Glib::ustring(std::to_string(n_codom)));
         it.set_value(4, Glib::ustring(STRINGS[STRING_CODOMINANT_TYPE]) + Glib::ustring(std::to_string(1)));
         it.set_value(5, Glib::ustring(STRINGS[STRING_CODOMINANT_TYPE]) + Glib::ustring(std::to_string(2)));
+        it.set_value(6, Glib::ustring(STRINGS[STRING_CODOMINANT_TYPE]) + Glib::ustring(std::to_string(1)));
+        it.set_value(7, Glib::ustring(STRINGS[STRING_CODOMINANT_TYPE]) + Glib::ustring(std::to_string(2)));
     }
     else{
         it.set_value(4, Glib::ustring(STRINGS[STRING_DOMINANT]));
         it.set_value(5, Glib::ustring(STRINGS[STRING_DOMINANT]));
+        it.set_value(6, Glib::ustring(STRINGS[STRING_DOMINANT]));
+        it.set_value(7, Glib::ustring(STRINGS[STRING_DOMINANT]));
         it.set_value(3, Glib::ustring("N/A"));
     }
 }
@@ -77,7 +81,7 @@ void record_model::row_double_click(const Gtk::TreeModel::Path& path, Gtk::TreeV
         if(tv->get_column(column_idx) == column)
             break;
     }
-    if(column_idx != 4 and column_idx != 5){
+    if(column_idx < 4){
         return;
     }
     char letter;
@@ -97,15 +101,24 @@ void record_model::row_double_click(const Gtk::TreeModel::Path& path, Gtk::TreeV
             row.set_value(column_idx, Glib::ustring(STRINGS[STRING_DOMINANT]));
             if(column_idx == 4)
                 (*parent_gene_data)[letter].gamete1.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
-            else
+            else if(column_idx == 5)
                 (*parent_gene_data)[letter].gamete2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+            else if(column_idx == 6)
+                (*parent_gene_data)[letter].gamete1_2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
+            else
+                (*parent_gene_data)[letter].gamete2_2.domination_type = GAMETE_DOMINATION_TYPE::DOMINANT;
         }
         else if(choice == 200){
             row.set_value(column_idx, Glib::ustring(STRINGS[STRING_RECESIVE]));
             if(column_idx == 4)
                 (*parent_gene_data)[letter].gamete1.domination_type = GAMETE_DOMINATION_TYPE::RECESIVE;
-            else
+            else if(column_idx == 5)
                 (*parent_gene_data)[letter].gamete2.domination_type = GAMETE_DOMINATION_TYPE::RECESIVE;
+            else if(column_idx == 6)
+                (*parent_gene_data)[letter].gamete1_2.domination_type = GAMETE_DOMINATION_TYPE::RECESIVE;
+            else
+                (*parent_gene_data)[letter].gamete2_2.domination_type = GAMETE_DOMINATION_TYPE::RECESIVE;
+
         }
     }
     else{
@@ -134,8 +147,12 @@ void record_model::row_double_click(const Gtk::TreeModel::Path& path, Gtk::TreeV
             row.set_value(column_idx, Glib::ustring(STRINGS[STRING_CODOMINANT_TYPE]) + val);
             if(column_idx == 4)
                 (*parent_gene_data)[letter].gamete1.codomination_index = (is_number(std::string(val))) ? std::stoi(std::string(val)) : 0;
-            else
+            else if(column_idx == 5)
                 (*parent_gene_data)[letter].gamete2.codomination_index = (is_number(std::string(val))) ? std::stoi(std::string(val)) : 0;
+            else if(column_idx == 6)
+                (*parent_gene_data)[letter].gamete1_2.codomination_index = (is_number(std::string(val))) ? std::stoi(std::string(val)) : 0;
+            else
+                (*parent_gene_data)[letter].gamete2_2.codomination_index = (is_number(std::string(val))) ? std::stoi(std::string(val)) : 0;
         }
     }
     update_data_package();
@@ -145,27 +162,82 @@ void record_model::row_double_click(const Gtk::TreeModel::Path& path, Gtk::TreeV
 
 
 void record_model::update_data_package(){
-    #ifdef DEBUG_MODE
-        std::cout << "==============================" << std::endl;
-        std::cout << "Content of gene data package:" << std::endl;
-        for(auto & it : *parent_gene_data){
-            std::cout << it.first << " (";
-            switch(it.second.dtype){
-                case GENE_DOMINATION_TYPE::FULL:
-                    std::cout << "FULL DOMINATION) ";
-                    std::cout << "(" << it.second.gamete1.domination_type << "," << it.second.gamete2.domination_type << ")";
-                    break;
-                case GENE_DOMINATION_TYPE::CO:
-                    std::cout << "CODOMINATION) ";
-                    std::cout << "(" << it.second.gamete1.codomination_index << "," << it.second.gamete2.codomination_index << ")";
-                    break;
-                case GENE_DOMINATION_TYPE::PARTIAL:
-                    std::cout << "PARTIAL DOMINATION) ";
-                    std::cout << "(" << it.second.gamete1.domination_type << "," << it.second.gamete2.domination_type << ")";
-                    break;
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "==============================" << std::endl;
+
+    #if DEBUG_MODE
+        std::cout << "Updating genes" << std::endl;
     #endif
+
+    std::string part1 = "", part2 = "";
+
+    for(auto & it : *parent_gene_data){
+        switch(it.second.dtype){
+            case GENE_DOMINATION_TYPE::FULL:
+            case GENE_DOMINATION_TYPE::PARTIAL:{
+                if(it.second.gamete1.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT){
+                    part1.push_back(it.first);
+                }
+                else{
+                    part1.push_back(it.first + 32);
+                }
+
+                if(it.second.gamete2.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT){
+                    part1.push_back(it.first);
+                }
+                else{
+                    part1.push_back(it.first + 32);
+                }
+
+                if(it.second.gamete1_2.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT){
+                    part2.push_back(it.first);
+                }
+                else{
+                    part2.push_back(it.first + 32);
+                }
+
+                if(it.second.gamete2_2.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT){
+                    part2.push_back(it.first);
+                }
+                else{
+                    part2.push_back(it.first + 32);
+                }
+            }
+            break;
+            case GENE_DOMINATION_TYPE::CO:
+                if(it.second.gamete1.codomination_index == 0){
+                    part1.push_back(it.first + 32);
+                }
+                else{
+                    part1.push_back(it.first);
+                    part1.append("<sub>" + std::to_string(it.second.gamete1.codomination_index) + "</sub>");
+                }
+
+                if(it.second.gamete2.codomination_index == 0){
+                    part1.push_back(it.first + 32);
+                }
+                else{
+                    part1.push_back(it.first);
+                    part1.append("<sub>" + std::to_string(it.second.gamete2.codomination_index) + "</sub>");
+                }
+
+                if(it.second.gamete1_2.codomination_index == 0){
+                    part2.push_back(it.first + 32);
+                }
+                else{
+                    part2.push_back(it.first);
+                    part2.append("<sub>" + std::to_string(it.second.gamete1_2.codomination_index) + "</sub>");
+                }
+
+                if(it.second.gamete2_2.codomination_index == 0){
+                    part2.push_back(it.first + 32);
+                }
+                else{
+                    part2.push_back(it.first);
+                    part2.append("<sub>" + std::to_string(it.second.gamete2_2.codomination_index) + "</sub>");
+                }
+
+            break;
+        }
+    }
+
+    result_label->set_markup("<b>" + part1 + " x " + part2 + "</b>");
 }

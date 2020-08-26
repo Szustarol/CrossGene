@@ -27,7 +27,7 @@ void prob_panel::gtk_elements_setup(){
     STRINGS[STRING_NO_CODOMIN]};
     
     records.set_records_and_install<std::string, std::string, std::string, std::string>(columns, &gene_data, gene_selection_treeview);
-    
+
     gene_setup_container.set_orientation(Gtk::Orientation::ORIENTATION_VERTICAL);
 
     gene_setup_container.add(gene_frame);
@@ -59,6 +59,8 @@ void prob_panel::gtk_elements_setup(){
     helper_label.set_text(STRINGS[STRING_GAMETE_HELPER]);
     gene_frame_buttons.add(helper_label);
 
+
     for(auto & p : all)
         p->set_visible(true);
+        
 }

@@ -18,8 +18,8 @@ const char * const en_en[] = {
     "Add/Edit a gene",
     "Calculate diagram",
     "Number of codominant allele",
-    "Gamete I type",
-    "Gamete II type",
+    "Parent I Gene Version I",
+    "Parent I Gene Version II",
     "Double click the Gamete type cell to change dominance type.",
     "Is this gamete dominant?",
     "Yes",
@@ -29,6 +29,8 @@ const char * const en_en[] = {
     "Recesive",
     "Codominant type ",
     "Not present",
+    "Parent II Gene Version I",
+    "Parent II Gene Version II",
 };
 
 string_container STRINGS = en_en;

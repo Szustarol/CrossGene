@@ -134,9 +134,9 @@ void add_gene_dialog::on_confirm_clicked(){
     letter->get_value(0, lval);
     returned_values.letter = lval.at(0);
     char dtype = domination_combobox.get_active_id().at(0);
-    if constexpr(DEBUG_MODE){
+    #if DEBUG_MODE
         std::cout << "Dtype:" << dtype << std::endl;
-    }
+    #endif
     switch(dtype){
         case 'f':
             returned_values.domination_type = GENE_DOMINATION_TYPE::FULL;
