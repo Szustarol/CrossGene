@@ -6,6 +6,7 @@
 #include "record_model.hpp"
 #include "Dialogs/add_gene_dialog.hpp"
 #include "../../../program_data.hpp"
+#include "../../../Calculations/calculate_diagram.hpp"
 
 
 class prob_panel : public Gtk::Box{
@@ -30,11 +31,17 @@ class prob_panel : public Gtk::Box{
 
     Gtk::Label crossing_label;
 
+    Gtk::Notebook * parent_notebook;
+
+    std::vector<std::shared_ptr<Gtk::Container>> * parent_panels;
+
     Gtk::Button add_button, remove_button, calc_button;
 
     std::vector<char> get_available_letters_vec();
 
     void gtk_elements_setup();
+
+    void tab_closure(std::shared_ptr<Gtk::Container> page);
 
     void on_add_gene_clicked();
     void on_remove_gene_clicked();
@@ -45,7 +52,7 @@ class prob_panel : public Gtk::Box{
     public:
 
 
-    prob_panel();
+    prob_panel(Gtk::Notebook * parent_notebook, std::vector<std::shared_ptr<Gtk::Container>> * parent_panels);
 };
 
 #endif

@@ -1,5 +1,5 @@
 CCX=g++
-CXXFLAGS=-std=c++17 -Wall -Wextra 
+CXXFLAGS=-std=c++17 -Wall -Wextra
 LIBS=
 LANGUAGE_FILE=Translations/strings_english.cpp
 BD=build
@@ -18,29 +18,34 @@ $(BD)/mainwindow.o: Widgets/main_window.cpp $(BD)/probpanel.o $(BD)/strings.o
 
 #Probability panel
 
-$(BD)/probpanel.o: Widgets/Panels/ProbPanel/prob_panel.cpp program_data.hpp $(BD)/probpanelgtksetup.o $(BD)/addgenedialog.o $(BD)/calculatediagram.o
+$(BD)/probpanel.o: Widgets/Panels/ProbPanel/prob_panel.cpp program_data.hpp $(BD)/probpanelgtksetup.o $(BD)/addgenedialog.o $(BD)/calculatediagram.o $(BD)/resultpanel.o
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
-$(BD)/probpanelgtksetup.o: Widgets/Panels/ProbPanel/prob_panel_gtk_setup.cpp $(BD)/strings.o $(BD)/recordmodel.o
+$(BD)/probpanelgtksetup.o: Widgets/Panels/ProbPanel/prob_panel_gtk_setup.cpp $(BD)/strings.o $(BD)/recordmodel.o program_data.hpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
 $(BD)/recordmodel.o: Widgets/Panels/ProbPanel/record_model.cpp program_data.hpp $(BD)/strings.o Widgets/Panels/ProbPanel/record_model.hpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
-$(BD)/addgenedialog.o: Widgets/Panels/ProbPanel/Dialogs/add_gene_dialog.cpp $(BD)/strings.o
+$(BD)/addgenedialog.o: Widgets/Panels/ProbPanel/Dialogs/add_gene_dialog.cpp $(BD)/strings.o program_data.hpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
+
+#Result panel
+
+$(BD)/resultpanel.o: Widgets/Panels/ResultPanel/result_panel.cpp Widgets/Panels/ResultPanel/result_panel.hpp program_data.hpp $(BD)/calculatediagram.o
+	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
 #Calculations
 
 $(BD)/calculatediagram.o: Calculations/calculate_diagram.cpp program_data.hpp Calculations/calculate_diagram.hpp
-	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
+	$(CXX) -c $(CXXFLAGS) -o $@ $< 
 
 
 #Strings and globals
 
 $(BD)/strings.o: $(LANGUAGE_FILE)
-	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
+	$(CXX) -c $(CXXFLAGS) -o $@ $< 
 
 clean:
 	$(RM) crossgene.out

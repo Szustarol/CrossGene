@@ -1,6 +1,7 @@
 #include "prob_panel.hpp"
 #include "../../../Translations/strings.hpp"
 #include "../../../defines.hpp"
+#include "../ResultPanel/result_panel.hpp"
 
 #if DEBUG_MODE
     #include <iostream>
@@ -8,9 +9,12 @@
 
 #include <tuple>
 
-prob_panel::prob_panel() : Gtk::Box(Gtk::Orientation::ORIENTATION_HORIZONTAL),
+prob_panel::prob_panel(Gtk::Notebook * parent_notebook, std::vector<std::shared_ptr<Gtk::Container>> * parent_panels) : Gtk::Box(Gtk::Orientation::ORIENTATION_HORIZONTAL),
 add_gene_dial(STRINGS[STRING_ADD_EDIT_GENE], true){
     gtk_elements_setup();
+
+    this->parent_notebook = parent_notebook;
+    this->parent_panels = parent_panels;
 
     for(char l = 'A'; l <= 'Z'; l++){
         available_letters.insert(std::pair<char, bool>(l, true));
@@ -21,6 +25,7 @@ add_gene_dial(STRINGS[STRING_ADD_EDIT_GENE], true){
     remove_button.signal_clicked().connect(sigc::mem_fun(this, &prob_panel::on_remove_gene_clicked));
     add_button.signal_clicked().connect(sigc::mem_fun(this, &prob_panel::on_add_gene_clicked));
     gene_selection_treeview.get_selection()->signal_changed().connect(sigc::mem_fun(this, &prob_panel::on_treeview_changed));
+    calc_button.signal_clicked().connect(sigc::mem_fun(this, &prob_panel::on_calc_clicked));
 
     for(unsigned column_idx; column_idx<gene_selection_treeview.get_n_columns(); column_idx++){
         gene_selection_treeview.get_column(column_idx)->set_sizing(Gtk::TreeViewColumnSizing::TREE_VIEW_COLUMN_AUTOSIZE);
@@ -49,7 +54,7 @@ void prob_panel::on_add_gene_clicked(){
             add_gene_dial.returned_values.description, n_cdm);
             available_letters.at(add_gene_dial.returned_values.letter) = false;
             unsigned rows = records.n_rows();
-            if(rows > 1){
+            if(rows > 0){
                 calc_button.set_sensitive(true);
             }
             else{
@@ -94,7 +99,56 @@ void prob_panel::on_treeview_changed(){
 }
 
 void prob_panel::on_calc_clicked(){
+    auto r = calculate_diagram(gene_data);
+    //!!TODO!! - memory leak fix
+    std::string title = crossing_label.get_text().raw();
+
+    parent_panels->push_back(
+        std::shared_ptr<Gtk::Container>( new result_panel(r.c_results, r.gametes1, r.gametes2, title))
+    );
+
+    std::string temp = ""; //parse title string
+
+    for(auto c : title){
+        if(isalpha(c)) temp += c;
+        else temp += "<sub>" + std::string(1, c) + "</sub>";
+    }
+
+    Gtk::Widget * tab_label = Gtk::manage(new Gtk::Label());
+    ((Gtk::Label *)tab_label)->set_markup(temp);
+    ((Gtk::Label *)tab_label)->set_margin_top(4);
+    Gtk::Widget * tab_button = Gtk::manage(new Gtk::ToolButton());
+    ((Gtk::ToolButton*) tab_button)->set_icon_name("window-close");
+    ((Gtk::ToolButton*) tab_button)->set_margin_left(10);
+    tab_button->set_visible(true);
+    tab_label->set_visible(true);
+    Gtk::Widget * tab_hbox = Gtk::manage(new Gtk::Box(Gtk::Orientation::ORIENTATION_HORIZONTAL));
+    ((Gtk::Box*)tab_hbox)->add(*tab_label);
+    ((Gtk::Box*)tab_hbox)->add(*tab_button);
+    ((Gtk::Box*)tab_hbox)->set_vexpand(true);
+    tab_hbox->set_visible(true);
+
+    auto  page = parent_panels->back();
+    page->set_visible(true);
+    parent_notebook->append_page(*page, *tab_hbox);
+
+    ((Gtk::ToolButton*) tab_button)->signal_clicked().connect(
+        sigc::bind<std::shared_ptr<Gtk::Container>>(
+            sigc::mem_fun(this, &prob_panel::tab_closure),
+            page
+        )
+    );
     
+}
+
+void prob_panel::tab_closure(std::shared_ptr<Gtk::Container>  page){
+    parent_notebook->remove(*page);
+    for(auto it = parent_panels->begin(); it != parent_panels->end(); it++){
+        if (*it == page){
+            parent_panels->erase(it);
+            break;
+        }
+    }
 }
 
 void prob_panel::on_remove_gene_clicked(){
@@ -106,6 +160,10 @@ void prob_panel::on_remove_gene_clicked(){
         available_letters.at(letter.at(0)) = true;
         records.remove_row_by_iterator(it);
         records.update_data_package();
+    }
+    unsigned rows = records.n_rows();
+    if(rows < 1){
+        calc_button.set_sensitive(false);
     }
 }
 

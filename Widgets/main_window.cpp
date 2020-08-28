@@ -18,8 +18,10 @@ main_window::main_window() : Gtk::Window(){
 
     notebook.set_tab_pos(Gtk::PositionType::POS_TOP);
 
-    panels.at(0) = std::unique_ptr<Gtk::Container>(new prob_panel());
+    panels.push_back(std::shared_ptr<Gtk::Container>(new prob_panel(&notebook, &panels)));
     panels.at(0)->set_visible(true);
 
     notebook.append_page(*panels.at(0).get(), STRINGS[STRING_PROBABILITY_TAB_NAME]);
+    auto test = new Gtk::Label("TEST");
+    notebook.set_action_widget(test);
 }

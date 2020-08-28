@@ -10,7 +10,7 @@ class main_window : public Gtk::Window{
 
     Gtk::Notebook notebook;
     
-    std::array<std::shared_ptr<Gtk::Container>, 1> panels;
+    std::vector<std::shared_ptr<Gtk::Container>> panels;
 
     public:
     main_window();

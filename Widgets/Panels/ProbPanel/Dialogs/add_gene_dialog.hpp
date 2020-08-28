@@ -3,6 +3,7 @@
 
 #include <gtkmm.h>
 #include "../../../../defines.hpp"
+#include "../../../../program_data.hpp"
 #include <map>
 
 class add_gene_dialog : public Gtk::Dialog{

@@ -31,6 +31,8 @@ const char * const en_en[] = {
     "Not present",
     "Parent II Gene Version I",
     "Parent II Gene Version II",
+    "Calculating...",
+    "Calculating the diagram. This might take a while.",
 };
 
 string_container STRINGS = en_en;
