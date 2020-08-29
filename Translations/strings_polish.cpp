@@ -1,7 +1,42 @@
 #include "strings.hpp"
 
 const char * const pl_pl[] = {
-    "Lista genów"
+    "Lista genów",
+    "Prawdopodobieństwo i diagramy Punnetta",
+    "Litera",
+    "Typ dominacji",
+    "Opis",
+    "Dodaj gen",
+    "Edytuj gen",
+    "Usuń",
+    "Zatwierdź",
+    "Anuluj",
+    "Pełna",
+    "Częściowa",
+    "Kodominacja",
+    "Dodaj/Edytuj gen",
+    "Generuj diagram",
+    "Liczba alleli kodominantnych",
+    "Rodzic I wersja I",
+    "Rodzic I wersja II",
+    "Dwukrotnie kliknij na komórkę z gametą aby zmienić rodzaj dominacji",
+    "Czy ta gameta jest dominująca",
+    "Tak",
+    "Nie",
+    "Wybierz wersję allelu kodominantnego",
+    "Dominujacy",
+    "Recesywny",
+    "Kodominacja rodzaj ",
+    "Nie obecny",
+    "Rodzic II wersja I",
+    "Rodzic II wersja II",
+    "Obliczanie...",
+    "Obliczanie diagramu, to może chwilę potrwać",
+    "Liczba obecnych fenotypów: ",
+    "Liczba obecnych genotypów: ",
+    "Genotypy: ",
+    "Fenotypy: ",
+    "Wystąpienia: ",
 };
 
 string_container STRINGS = pl_pl;

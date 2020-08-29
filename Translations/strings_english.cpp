@@ -26,7 +26,7 @@ const char * const en_en[] = {
     "No",
     "Select the version of the codominant allele",
     "Dominant",
-    "Recesive",
+    "Recessive",
     "Codominant type ",
     "Not present",
     "Parent II Gene Version I",
@@ -37,6 +37,7 @@ const char * const en_en[] = {
     "Number of genotypes present: ",
     "Phenotypes: ",
     "Genotypes: ",
+    "Occurences: ",
 };
 
 string_container STRINGS = en_en;

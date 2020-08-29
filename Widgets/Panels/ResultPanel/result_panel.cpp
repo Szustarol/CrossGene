@@ -6,25 +6,24 @@ Gdk::RGBA result_panel::get_color_by_index(int index, int max_index, int palette
     float partition = (((float)index)/(max_index));
     Gdk::RGBA r;
 
-    if(max_index == 0){
-        r.set_alpha(1);
-        r.set_blue(0);
-        r.set_green(0);
-        r.set_red(0);
-        return r;
-    }
-
     if(palette == 0){
         r.set_green(partition);
         r.set_red(1-partition);
-        r.set_green(0);
+        r.set_blue(0);
         r.set_alpha(0.2);
     }
     else{
         r.set_blue(partition);
         r.set_red(1-partition);
-        r.set_blue(0);
+        r.set_green(0);
         r.set_alpha(1);
+        if(max_index == 0){
+            r.set_alpha(1);
+            r.set_blue(0);
+            r.set_green(0);
+            r.set_red(0);
+            return r;
+        }
     }
     return r;
 }
@@ -89,8 +88,6 @@ result_panel::result_panel(const std::vector<std::vector<calculation_result>> & 
     phenotypes_box.set_margin_top(10);
     phenotypes_box.set_margin_left(10);
 
-    phenotypes_label.set_halign(Gtk::Align::ALIGN_START);
-
     phenotypes_box.set_valign(Gtk::Align::ALIGN_START);
     genotypes_box.set_valign(Gtk::Align::ALIGN_START);
 
@@ -107,28 +104,6 @@ result_panel::result_panel(const std::vector<std::vector<calculation_result>> & 
             );
     }
 
-
-    unsigned index = 0;
-
-    for(auto & str : genotype_names){
-        genotype_labels.push_back(Gtk::Label());
-        genotype_labels.back().set_markup(str);
-        genotype_labels.back().set_visible(true);
-        genotype_labels.back().override_background_color(genotype_colors.at(index));
-        genotypes_box.add(genotype_labels.back());
-
-        index++;
-    }
-
-    index = 0;
-    for(auto & str : phenotype_names){
-        phenotype_labels.push_back(Gtk::Label());
-        phenotype_labels.back().set_markup(str);
-        phenotype_labels.back().set_visible(true);
-        phenotype_labels.back().override_color(phenotype_colors.at(index));
-        phenotypes_box.add(phenotype_labels.back());
-        index++;
-    }
 
 
     main_scroll.set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
@@ -161,6 +136,12 @@ result_panel::result_panel(const std::vector<std::vector<calculation_result>> & 
     grid_frames.back().set_visible(true);
     grid_labels.back().set_visible(true);
     grid_labels.back().set_markup(temp);
+
+    std::vector<unsigned> phenotype_count;
+    std::vector<unsigned> genotype_count;
+
+    phenotype_count.resize(n_phenotypes, 0);
+    genotype_count.resize(n_genotypes, 0);
 
 
     for(unsigned gamete = 0; gamete < sq_size; gamete++){
@@ -207,10 +188,48 @@ result_panel::result_panel(const std::vector<std::vector<calculation_result>> & 
                     c_results.at(row).at(col).phenotype_index
                 )
             );
+            genotype_count.at(c_results.at(row).at(col).genotype_index) ++;
+            phenotype_count.at(c_results.at(row).at(col).phenotype_index) ++;
             grid_frames.back().add(grid_labels.back());
             main_grid.attach(grid_frames.back(), row+1, col+1);
         }
     }
 
+
+    unsigned index = 0;
+
+    for(auto & str : genotype_names){
+        genotype_labels.push_back(Gtk::Label());
+        std::string occ = ", ";
+        occ += STRINGS[STRING_OCCURENCES];
+        occ += std::to_string(genotype_count.at(index)) + "/" + std::to_string(sq_size*sq_size);
+        std::string percentage = std::to_string(100*((float)(genotype_count.at(index)))/(sq_size*sq_size));
+        percentage = percentage.substr(0, percentage.find(".", 0));
+        percentage = percentage.substr(0, percentage.find(",", 0));
+        occ += " (" + percentage + "%) ";
+        genotype_labels.back().set_markup(str + occ);
+        genotype_labels.back().set_visible(true);
+        genotype_labels.back().override_background_color(genotype_colors.at(index));
+        genotypes_box.add(genotype_labels.back());
+
+        index++;
+    }
+
+    index = 0;
+    for(auto & str : phenotype_names){
+        phenotype_labels.push_back(Gtk::Label());
+        std::string occ = ", ";
+        occ += STRINGS[STRING_OCCURENCES];
+        occ += std::to_string(phenotype_count.at(index)) + "/" + std::to_string(sq_size*sq_size);
+        std::string percentage = std::to_string(100*((float)(phenotype_count.at(index)))/(sq_size*sq_size));
+        percentage = percentage.substr(0, percentage.find(".", 0));
+        percentage = percentage.substr(0, percentage.find(",", 0));
+        occ += " (" + percentage + "%) ";
+        phenotype_labels.back().set_markup(str + occ);
+        phenotype_labels.back().set_visible(true);
+        phenotype_labels.back().override_color(phenotype_colors.at(index));
+        phenotypes_box.add(phenotype_labels.back());
+        index++;
+    }
 
 }
