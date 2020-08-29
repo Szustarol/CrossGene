@@ -33,7 +33,7 @@ $(BD)/addgenedialog.o: Widgets/Panels/ProbPanel/Dialogs/add_gene_dialog.cpp $(BD
 
 #Result panel
 
-$(BD)/resultpanel.o: Widgets/Panels/ResultPanel/result_panel.cpp Widgets/Panels/ResultPanel/result_panel.hpp program_data.hpp $(BD)/calculatediagram.o
+$(BD)/resultpanel.o: Widgets/Panels/ResultPanel/result_panel.cpp Widgets/Panels/ResultPanel/result_panel.hpp program_data.hpp $(BD)/calculatediagram.o $(BD)/strings.o
 	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBS) $(PKG_CONFIG)
 
 #Calculations

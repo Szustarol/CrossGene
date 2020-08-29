@@ -1,6 +1,7 @@
 #include "calculate_diagram.hpp"
 #include <vector>
 #include <algorithm>
+#include <map>
 
 std::string gene_data_to_string(const single_gene_data & gd){
     std::string result = "";
@@ -128,6 +129,39 @@ calculation_results calculate_diagram(const GENE_DATA & gene_data){
 
     calculation_results c_results;
     std::vector<std::vector<std::vector<single_gene_data>>> calculation_raw(sq_size);
+    std::vector<std::vector<std::string>> phenotype_raw(sq_size);
+    
+    auto resulting_phenotype = [&](single_gene_data & lhs, single_gene_data & rhs){
+        std::string result = "";
+        if(gene_data.at(lhs.letter).dtype == GENE_DOMINATION_TYPE::FULL){
+            if(lhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT
+            or rhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT)
+                result += lhs.letter;
+            else
+                result += tolower(lhs.letter);
+        }
+        else if(gene_data.at(lhs.letter).dtype == GENE_DOMINATION_TYPE::PARTIAL){
+            if(lhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT
+            and rhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::DOMINANT)
+                result += lhs.letter;
+            else if(lhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::RECESIVE
+            and rhs.gamete_description.domination_type == GAMETE_DOMINATION_TYPE::RECESIVE)
+                result += tolower(lhs.letter);
+            else
+                result += lhs.letter + std::string(1, '0');
+        }
+        else{
+            if(single_gene_compare(lhs, rhs)){
+                result += gene_data_to_string(lhs);
+                result += gene_data_to_string(rhs);
+            }
+            else{
+                result += gene_data_to_string(rhs);
+                result += gene_data_to_string(lhs);
+            }
+        }
+        return result;
+    };
 
     c_results.c_results.resize(sq_size);
 
@@ -137,10 +171,23 @@ calculation_results calculate_diagram(const GENE_DATA & gene_data){
     for(auto & obj : calculation_raw)
         obj.resize(sq_size);
 
+    for(auto & obj : phenotype_raw){
+        obj.resize(sq_size);
+        for(auto &obj2 : obj){
+            obj2.resize(sq_size);
+            for(auto & str: obj){
+                str = "";
+            }
+        }
+    }
+    
+
     for(unsigned i = 0; i < sq_size; i++){
         for(unsigned j = 0 ; j < sq_size; j++){
             calculation_raw.at(i).at(j).reserve(n_genes);
             for(unsigned y = 0; y < n_genes; y++){
+                std::string feno = resulting_phenotype(gametes_1.at(j).at(y), gametes_2.at(i).at(y));
+                phenotype_raw.at(i).at(j) += feno;
                 if(single_gene_compare(gametes_1.at(j).at(y), gametes_2.at(i).at(y))){
                     calculation_raw.at(i).at(j).push_back(gametes_1.at(j).at(y));
                     calculation_raw.at(i).at(j).push_back(gametes_2.at(i).at(y));
@@ -154,6 +201,18 @@ calculation_results calculate_diagram(const GENE_DATA & gene_data){
         }
     }
 
+
+    //genotype calculation
+
+    std::map<std::string, unsigned> genotypes;
+    unsigned n_genotypes = 0;
+
+    std::map<std::string, unsigned> phenotypes;
+    unsigned n_phenotypes = 0;
+
+    std::vector<std::string> phenotype_names;
+    std::vector<std::string> genotype_names;
+
     for(unsigned i = 0; i < sq_size; i++){
         for(unsigned j = 0 ; j < sq_size; j++){
             c_results.c_results.at(i).at(j).string_representation = "";
@@ -161,6 +220,26 @@ calculation_results calculate_diagram(const GENE_DATA & gene_data){
                 c_results.c_results.at(i).at(j).string_representation +=
                     gene_data_to_string(calculation_raw.at(i).at(j).at(y));
             }
+            auto res = genotypes.insert(std::pair<std::string, unsigned>(c_results.c_results.at(i).at(j).string_representation, n_genotypes));
+            if(res.second){
+                c_results.c_results.at(i).at(j).genotype_index = n_genotypes;
+                genotype_names.push_back(c_results.c_results.at(i).at(j).string_representation);
+                n_genotypes ++;
+            }
+            else{
+                c_results.c_results.at(i).at(j).genotype_index = res.first->second;
+            }
+
+            auto res2 = phenotypes.insert(std::pair<std::string, unsigned>(phenotype_raw.at(i).at(j), n_phenotypes));
+            if(res2.second){
+                c_results.c_results.at(i).at(j).phenotype_index = n_phenotypes;
+                phenotype_names.push_back(c_results.c_results.at(i).at(j).string_representation);
+                n_phenotypes ++;
+            }
+            else{
+                c_results.c_results.at(i).at(j).phenotype_index = res2.first->second;
+            }
+
             #if DEBUG_MODE
                 std::cout << c_results.c_results.at(i).at(j).string_representation << ", ";
             #endif
@@ -170,8 +249,21 @@ calculation_results calculate_diagram(const GENE_DATA & gene_data){
         #endif
     }
 
+
+    c_results.n_phenotypes = n_phenotypes;
+    c_results.n_genotypes = n_genotypes;
+
+    #if DEBUG_MODE
+        std::cout << n_phenotypes << "/" <<  n_genotypes << std::endl;
+    #endif
+
+
     c_results.gametes1 = std::move(gametes_1);
     c_results.gametes2 = std::move(gametes_2);
+
+    c_results.phenotype_names = std::move(phenotype_names);
+    c_results.genotype_names = std::move(genotype_names);
+
 
     return c_results;
     

@@ -37,7 +37,7 @@ struct gene_data_package{
 
 struct calculation_result{
     std::string string_representation;
-    unsigned fenotype_index; //unused yet
+    unsigned phenotype_index; //unused yet
     unsigned genotype_index; //unused yet
 };
 
@@ -50,6 +50,10 @@ struct calculation_results{
     std::vector<std::vector<calculation_result>> c_results;
     std::vector<whole_gamete> gametes1;
     std::vector<whole_gamete> gametes2;
+    unsigned n_genotypes;
+    unsigned n_phenotypes;
+    std::vector<std::string> genotype_names;
+    std::vector<std::string> phenotype_names;
 };
 
 

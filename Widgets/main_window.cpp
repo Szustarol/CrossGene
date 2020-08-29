@@ -22,6 +22,4 @@ main_window::main_window() : Gtk::Window(){
     panels.at(0)->set_visible(true);
 
     notebook.append_page(*panels.at(0).get(), STRINGS[STRING_PROBABILITY_TAB_NAME]);
-    auto test = new Gtk::Label("TEST");
-    notebook.set_action_widget(test);
 }

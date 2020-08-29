@@ -33,6 +33,10 @@ const char * const en_en[] = {
     "Parent II Gene Version II",
     "Calculating...",
     "Calculating the diagram. This might take a while.",
+    "Number of phenotypes present: ",
+    "Number of genotypes present: ",
+    "Phenotypes: ",
+    "Genotypes: ",
 };
 
 string_container STRINGS = en_en;

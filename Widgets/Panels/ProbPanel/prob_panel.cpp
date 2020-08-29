@@ -100,11 +100,11 @@ void prob_panel::on_treeview_changed(){
 
 void prob_panel::on_calc_clicked(){
     auto r = calculate_diagram(gene_data);
-    //!!TODO!! - memory leak fix
     std::string title = crossing_label.get_text().raw();
 
     parent_panels->push_back(
-        std::shared_ptr<Gtk::Container>( new result_panel(r.c_results, r.gametes1, r.gametes2, title))
+        std::shared_ptr<Gtk::Container>( new result_panel(r.c_results, r.gametes1, r.gametes2,
+        r.n_genotypes, r.n_phenotypes, r.genotype_names, r.phenotype_names, title))
     );
 
     std::string temp = ""; //parse title string
